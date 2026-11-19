@@ -1,0 +1,5 @@
+# Vite 的构建工具需要安装平台二进制；其余两个脚本只显示赞助信息。
+allowBuilds:
+  esbuild@0.20.2: true
+  core-js@3.51.0: false
+  core-js-pure@3.51.0: false

@@ -1,0 +1,17 @@
+{
+  "name": "MindBody",
+  "appid": "",
+  "description": "个人身心健康记录与趋势观察",
+  "versionName": "0.1.0",
+  "versionCode": "100",
+  "vueVersion": "3",
+  "uniStatistics": {
+    "enable": false
+  },
+  "h5": {
+    "title": "MindBody · 记录身心，关照自己",
+    "router": {
+      "mode": "hash"
+    }
+  }
+}

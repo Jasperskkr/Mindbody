@@ -1,0 +1,29 @@
+# Dependencies and generated files
+node_modules/
+dist/
+unpackage/
+.pnpm-store/
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Secrets: only an empty example file may be tracked
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Keep real health records and exports outside version control
+private/
+local-data/
+exports/
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+
+# Local QA screenshots and tool output
+.artifacts/
