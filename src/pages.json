@@ -6,6 +6,13 @@
         "navigationStyle": "custom",
         "navigationBarTitleText": "MindBody"
       }
+    },
+    {
+      "path": "pages/record/index",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "每日记录 · MindBody"
+      }
     }
   ],
   "globalStyle": {

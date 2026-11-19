@@ -1,24 +1,58 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
-import { mockOverview } from '../../data/mock'
-import { formatLocalDate } from '../../utils/date'
+import type { DailyRecord } from '../../types/health'
+import { loadDailyRecord } from '../../storage/daily-records'
+import { formatLocalDate, getLocalDateKey } from '../../utils/date'
+import { toDailyOverview } from '../../utils/daily-overview'
 
 const today = ref(formatLocalDate(new Date()))
+const record = ref<DailyRecord | null>(null)
+const loading = ref(true)
+const readError = ref('')
+const overview = computed(() => toDailyOverview(record.value))
+const overviewStatus = computed(() => {
+  if (loading.value) return '读取中'
+  if (readError.value) return '读取失败'
+  return record.value ? '今日记录' : '尚未记录'
+})
+let requestId = 0
 
-// 重新进入首页时更新日期。
+async function refreshOverview() {
+  // 页面重新显示时重新读同一份存储；过期的异步结果不能覆盖较新的结果。
+  const currentRequest = ++requestId
+  const date = new Date()
+  today.value = formatLocalDate(date)
+  loading.value = true
+  readError.value = ''
+  record.value = null
+  try {
+    const loaded = await loadDailyRecord(getLocalDateKey(date))
+    if (currentRequest === requestId) record.value = loaded
+  } catch (error) {
+    if (currentRequest === requestId) {
+      readError.value = error instanceof Error ? error.message : '读取今天的记录失败，请重试。'
+    }
+  } finally {
+    if (currentRequest === requestId) loading.value = false
+  }
+}
+
 onShow(() => {
-  today.value = formatLocalDate(new Date())
+  void refreshOverview()
 })
 
-function showComingSoon(feature: 'record' | 'trends') {
-  const content = feature === 'record'
-    ? '每日记录将在下一阶段加入。当前页面展示的是模拟数据，还没有保存任何健康记录。'
-    : '历史趋势将在后续阶段加入。完成每日记录功能后，再逐步呈现你的变化。'
+function openRecord() {
+  uni.navigateTo({
+    url: '/pages/record/index',
+    fail: () => uni.showToast({ title: '暂时无法打开记录页，请重试。', icon: 'none' }),
+  })
+}
 
+function showTrendsPlaceholder() {
   uni.showModal({
-    title: feature === 'record' ? '从一次小小的记录开始' : '慢慢看见自己的节奏',
-    content,
+    title: '慢慢看见自己的节奏',
+    content: '历史趋势将在后续阶段加入。当前可以先在每日记录页填写并保存当天感受。',
     showCancel: false,
     confirmText: '知道了',
     confirmColor: '#47634c',
@@ -38,7 +72,7 @@ function showComingSoon(feature: 'record' | 'trends') {
       </view>
       <view class="demo-badge">
         <view class="badge-dot" />
-        <text>体验预览</text>
+        <text>本地记录</text>
       </view>
     </view>
 
@@ -55,34 +89,50 @@ function showComingSoon(feature: 'record' | 'trends') {
             <text class="section-kicker">DAILY CHECK-IN</text>
             <text class="section-title" role="heading" aria-level="2">今日状态概览</text>
           </view>
-          <text class="sample-label">模拟数据</text>
+          <text class="sample-label">{{ overviewStatus }}</text>
         </view>
 
-        <view class="metrics">
-          <view
-            v-for="metric in mockOverview.metrics"
-            :key="metric.id"
-            class="metric"
-            :class="`tone-${metric.tone}`"
-          >
-            <view class="metric-top">
-              <text class="metric-label">{{ metric.label }}</text>
-              <text class="metric-symbol" aria-hidden="true">{{ metric.symbol }}</text>
+        <view v-if="loading" class="overview-message" role="status">正在读取今天的记录…</view>
+        <view v-else-if="readError" class="overview-message overview-error" role="alert">
+          <text class="overview-error-title">暂时无法显示今日记录</text>
+          <text>{{ readError }}</text>
+          <button
+            class="overview-retry"
+            role="button"
+            tabindex="0"
+            @click="refreshOverview"
+            @keyup.enter.stop.prevent="refreshOverview"
+            @keydown.space.prevent
+            @keyup.space.stop.prevent="refreshOverview"
+          >重新读取</button>
+        </view>
+        <view v-else>
+          <text v-if="!record" class="empty-overview" role="status">今天还没有记录，点击「每日记录」留下第一条。</text>
+          <view class="metrics">
+            <view
+              v-for="metric in overview.metrics"
+              :key="metric.id"
+              class="metric"
+              :class="`tone-${metric.tone}`"
+            >
+              <view class="metric-top">
+                <text class="metric-label">{{ metric.label }}</text>
+                <text class="metric-symbol" aria-hidden="true">{{ metric.symbol }}</text>
+              </view>
+              <text class="metric-value">
+                {{ metric.value }}<text v-if="metric.unit" class="metric-unit"> {{ metric.unit }}</text>
+              </text>
+              <text class="metric-detail">{{ metric.detail }}</text>
             </view>
-            <text class="metric-value">
-              {{ metric.value }}<text v-if="metric.id === 'sleep'" class="metric-unit"> h</text>
-            </text>
-            <text class="metric-detail">{{ metric.detail }}</text>
           </view>
-        </view>
 
-        <view class="body-note">
-          <view class="body-note-dot" />
-          <view class="body-note-copy">
-            <text class="body-note-label">身体感受</text>
-            <text>{{ mockOverview.bodyNote }}</text>
+          <view class="body-note">
+            <view class="body-note-dot" />
+            <view class="body-note-copy">
+              <text class="body-note-label">身体感受</text>
+              <text class="body-note-value">{{ overview.bodyNote }}</text>
+            </view>
           </view>
-          <text class="note-tag">示例</text>
         </view>
         <text class="overview-caption">每一种状态都值得被看见，不必给自己打分。</text>
       </view>
@@ -107,15 +157,15 @@ function showComingSoon(feature: 'record' | 'trends') {
             class="record-button"
             role="button"
             tabindex="0"
-            @click="showComingSoon('record')"
-            @keyup.enter.stop.prevent="showComingSoon('record')"
+            @click="openRecord"
+            @keyup.enter.stop.prevent="openRecord"
             @keydown.space.prevent
-            @keyup.space.stop.prevent="showComingSoon('record')"
+            @keyup.space.stop.prevent="openRecord"
           >
             <text>每日记录</text>
             <text class="button-arrow" aria-hidden="true">↗</text>
           </button>
-          <text class="record-footnote">功能准备中 · 现在先熟悉你的首页</text>
+          <text class="record-footnote">只保存在此设备 · 随时记下一点感受</text>
         </view>
 
         <view class="quiet-reminder">
@@ -138,10 +188,10 @@ function showComingSoon(feature: 'record' | 'trends') {
           class="entry-card trend-entry"
           role="button"
           tabindex="0"
-          @click="showComingSoon('trends')"
-          @keyup.enter.stop.prevent="showComingSoon('trends')"
+          @click="showTrendsPlaceholder"
+          @keyup.enter.stop.prevent="showTrendsPlaceholder"
           @keydown.space.prevent
-          @keyup.space.stop.prevent="showComingSoon('trends')"
+          @keyup.space.stop.prevent="showTrendsPlaceholder"
         >
           <view class="entry-icon trend-icon" aria-hidden="true">
             <view class="bar bar-one" />
@@ -172,7 +222,7 @@ function showComingSoon(feature: 'record' | 'trends') {
       <view class="footer-divider" />
       <text class="footer-brand">MindBody · 身心之间，留一处空间</text>
       <text class="footer-note">用于健康记录与自我观察，不提供疾病诊断或治疗建议。</text>
-      <text class="footer-demo">当前为演示首页，全部健康状态均为虚构示例。</text>
+      <text class="footer-demo">概览来自今天已保存的本地记录；未填写的项目保持空缺。</text>
     </view>
   </view>
 </template>
@@ -307,6 +357,47 @@ function showComingSoon(feature: 'record' | 'trends') {
   border-radius: 6px;
 }
 
+.overview-message, .empty-overview {
+  display: block;
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #f2f5ea;
+  color: #617154;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.overview-error {
+  background: #faf0e8;
+  color: #895437;
+}
+
+.overview-error-title {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.overview-retry {
+  margin: 14px 0 0;
+  padding: 10px;
+  min-height: 44px;
+  border-radius: 9px;
+  background: #e5ebda;
+  color: #465f3a;
+  cursor: pointer;
+}
+
+.overview-retry::after {
+  border: 0;
+}
+
+.overview-retry:focus-visible {
+  outline: 3px solid #a56b34;
+  outline-offset: 3px;
+}
+
 .metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -363,6 +454,7 @@ function showComingSoon(feature: 'record' | 'trends') {
   font-weight: 600;
   margin-top: 8px;
   line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .metric-unit {
@@ -395,6 +487,7 @@ function showComingSoon(feature: 'record' | 'trends') {
 
 .body-note-copy {
   flex: 1;
+  min-width: 0;
 }
 
 .body-note-label {
@@ -402,9 +495,9 @@ function showComingSoon(feature: 'record' | 'trends') {
   color: #77816f;
 }
 
-.note-tag {
-  font-size: 9px;
-  color: #7c8573;
+.body-note-value {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .overview-caption {

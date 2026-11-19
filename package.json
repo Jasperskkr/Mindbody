@@ -1,6 +1,6 @@
 {
   "name": "mindbody",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "description": "MindBody 个人身心健康记录应用",
   "packageManager": "pnpm@11.19.0",
@@ -11,7 +11,8 @@
     "dev:h5": "uni --host 127.0.0.1 --port 5173 --strictPort",
     "build:h5": "uni build",
     "type-check": "vue-tsc --noEmit",
-    "check": "pnpm type-check && pnpm build:h5"
+    "test": "node --test tests/*.test.cjs",
+    "check": "pnpm type-check && pnpm test && pnpm build:h5"
   },
   "dependencies": {
     "@dcloudio/uni-app": "3.0.0-5030420261029002",
