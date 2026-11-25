@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "items": {
+    "SRC-NIMH-SELFCARE": {
+      "version": 1,
+      "hash": "d8f51639be4686ed087f159ef66ab4cbae5cfec199c7f5228a6fc548e6d5afe4"
+    },
+    "SRC-SUWEN-01": {
+      "version": 1,
+      "hash": "7ed2f42fcfa0e878b851c5739eaa2b95c1c820badfe7d4651b8755c82c4fddc9"
+    },
+    "SRC-WHO-TCM-TERMS": {
+      "version": 1,
+      "hash": "57ebe0957641077c4bdd3ef10578834b76cad75d88dbf8b77bd610fdcbfb82a0"
+    },
+    "PSY-SELFCARE-01": {
+      "version": 1,
+      "hash": "29b24a1e8b92216dfa7a20f29aa743d7de76447676b543a1dfc0fb404dd7269c"
+    },
+    "PSY-SLEEP-01": {
+      "version": 1,
+      "hash": "2d7758ff9a42181b710697944bc330784af21392b5e46454d7ff1bc731a0e327"
+    },
+    "TCM-DAILY-01": {
+      "version": 1,
+      "hash": "b21af8afe930fc73a55954edc03ffb16b920e839203cca1e9fc845fd00d07dd4"
+    },
+    "TCM-FRAME-01": {
+      "version": 1,
+      "hash": "a1b8f69c9204e1a8f055f2de0ce2c53c08d3420f99d85f074f6e9684fadd5ed7"
+    }
+  },
+  "policy": {
+    "version": 1,
+    "hash": "529a25180d98ca4b4159829578d999181d64f56c607ef4c2ec40f14c2df7a8ec"
+  }
+}

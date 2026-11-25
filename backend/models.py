@@ -99,6 +99,7 @@ class Consent(StrictModel):
 
 
 class InsightRequest(StrictModel):
+    knowledgeHash: str | None = Field(default=None, pattern=r'^[0-9a-f]{64}$')
     context: DailyContext
     mode: Mode
     serviceMode: Literal['mock', 'llm']
@@ -122,6 +123,7 @@ class DailyInsight(StrictModel):
     reply: str
     notice: str
     help: str | None = None
+    knowledgeHash: str | None = None
 
 
 class ModelSelection(StrictModel):

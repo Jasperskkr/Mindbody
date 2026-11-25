@@ -1,0 +1,7 @@
+const { spawnSync } = require('node:child_process')
+const { resolve } = require('node:path')
+const root = resolve(__dirname, '..')
+const python = resolve(root, '.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python')
+const result = spawnSync(python, ['-X', 'utf8', 'scripts/knowledge.py', ...process.argv.slice(2)], { cwd: root, stdio: 'inherit' })
+if (result.error) process.stderr.write('请按 README 创建 .venv 并安装后端依赖。\n')
+process.exit(result.status ?? 1)

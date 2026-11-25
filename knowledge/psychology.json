@@ -1,20 +1,78 @@
 [
   {
-    "id": "PSY-SELFCARE-01", "domain": "psychology", "title": "感受可以被记录，不必急着解释",
-    "tags": ["mood", "stress", "energy"], "keywords": ["情绪", "压力", "精力", "感受", "心理", "记录"],
+    "id": "PSY-SELFCARE-01",
+    "domain": "psychology",
+    "title": "感受可以被记录，不必急着解释",
+    "tags": [
+      "mood",
+      "stress",
+      "energy"
+    ],
+    "keywords": [
+      "情绪",
+      "压力",
+      "精力",
+      "感受",
+      "心理",
+      "记录"
+    ],
     "content": "自我关怀可以从留意自己的需要开始。可以给当下的感受起一个名字，再由自己决定是否继续记录或与信任的人交流。这里的每日分值是自我记录，不能用来推断心理疾病。",
     "uncertainty": "参考公共心理健康教育材料作原创转述；不是心理治疗。单次感受无法说明持续状态或原因。",
     "evidenceType": "public_health_guidance",
-    "review": {"status": "source_checked", "checkedAt": "2026-11-19", "scope": "已核对原网页自我关怀与社会支持段落；未作临床有效性审核", "version": 1},
-    "source": {"title": "Caring for Your Mental Health", "publisher": "NIMH", "url": "https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health", "locator": "How can I take care of my mental health? / Stay connected"}
+    "review": {
+      "status": "source_checked",
+      "checkedAt": "2026-11-19",
+      "scope": "已核对原网页自我关怀与社会支持段落；未作临床有效性审核",
+      "version": 1
+    },
+    "version": 1,
+    "lifecycle": "active",
+    "sourceId": "SRC-NIMH-SELFCARE",
+    "sourceVersion": 1,
+    "sourceLocator": "How can I take care of my mental health? / Stay connected",
+    "contentOrigin": "original_summary",
+    "professionalReview": {
+      "status": "not_reviewed",
+      "reviewer": null,
+      "qualification": null,
+      "reviewedAt": null,
+      "note": "沿用 V0.6 来源核对结果，未经过合格专业人员审核"
+    }
   },
   {
-    "id": "PSY-SLEEP-01", "domain": "psychology", "title": "把睡眠放进生活节奏中观察",
-    "tags": ["sleepHours"], "keywords": ["睡眠", "作息", "休息", "睡觉"],
+    "id": "PSY-SLEEP-01",
+    "domain": "psychology",
+    "title": "把睡眠放进生活节奏中观察",
+    "tags": [
+      "sleepHours"
+    ],
+    "keywords": [
+      "睡眠",
+      "作息",
+      "休息",
+      "睡觉"
+    ],
     "content": "睡眠是自我关怀的一部分。可以回看自己的休息安排，并选择一个容易执行的小准备，例如在合适的时候收起屏幕。记录中的时长只说明自己填写的内容，无法单独判断睡眠质量。",
     "uncertainty": "公共教育内容适用于一般自我关怀；不根据睡眠时长诊断失眠，也不保证某个行动改善症状。",
     "evidenceType": "public_health_guidance",
-    "review": {"status": "source_checked", "checkedAt": "2026-11-19", "scope": "已核对原网页 Make sleep a priority 段落并原创转述；未作临床有效性审核", "version": 1},
-    "source": {"title": "Caring for Your Mental Health", "publisher": "NIMH", "url": "https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health", "locator": "How can I take care of my mental health? / Make sleep a priority"}
+    "review": {
+      "status": "source_checked",
+      "checkedAt": "2026-11-19",
+      "scope": "已核对原网页 Make sleep a priority 段落并原创转述；未作临床有效性审核",
+      "version": 1
+    },
+    "version": 1,
+    "lifecycle": "active",
+    "sourceId": "SRC-NIMH-SELFCARE",
+    "sourceVersion": 1,
+    "sourceLocator": "How can I take care of my mental health? / Make sleep a priority",
+    "contentOrigin": "original_summary",
+    "professionalReview": {
+      "status": "not_reviewed",
+      "reviewer": null,
+      "qualification": null,
+      "reviewedAt": null,
+      "note": "沿用 V0.6 来源核对结果，未经过合格专业人员审核"
+    }
   }
 ]

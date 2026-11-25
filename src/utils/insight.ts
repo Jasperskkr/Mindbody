@@ -1,23 +1,23 @@
-import psychology from '../../knowledge/psychology.json'
-import tcm from '../../knowledge/tcm.json'
+import snapshot from '../../knowledge/generated.json'
 import type { ConversationMode, DailyContext, DailyInsight, InsightPerspective, KnowledgeCard, MicroAction } from '../types/insight'
 import { contextFacts, metricIds } from './daily-context'
+import { rankKnowledge } from '../generated/knowledge-ranking'
 
-export const knowledgeCards = [...psychology, ...tcm] as KnowledgeCard[]
+export const knowledgeCards = snapshot.cards as KnowledgeCard[]
+export const knowledgeHash = snapshot.knowledgeHash
+export const knowledgeTopK = snapshot.policy.topK
+export const knowledgeSources = snapshot.sources
 export const microActions: MicroAction[] = [
   { id: 'notice', title: '给此刻的感受起个名字', description: '用一个自己觉得贴切的词描述当下，可以随时停止，不必改变它。' },
   { id: 'pause', title: '留一分钟安静的空隙', description: '在安全、舒适的位置稍作停顿，留意周围。不舒服时就停止。' },
   { id: 'prepare', title: '为休息做一个小准备', description: '选择收起屏幕或整理休息环境中的一件小事，由自己决定何时做。' },
 ]
 
-export function retrieveCards(context: DailyContext, mode: ConversationMode, question = '', cards = knowledgeCards): KnowledgeCard[] {
+export function retrieveCards(context: DailyContext, mode: ConversationMode, question = '', cards = knowledgeCards, topK = knowledgeTopK): KnowledgeCard[] {
   if (!context.today) return []
+  if (Object.values(topK).some(value => !Number.isInteger(value) || value < 1 || value > 10)) throw new Error('每域 Top-K 必须为 1–10 整数。')
   const tags = metricIds.filter((id) => context.today![id] !== null)
-  return cards.filter((card) => card.review.status === 'source_checked' && (mode === 'combined' || card.domain === mode))
-    .map((card) => ({ card, score: card.tags.filter((tag) => tags.includes(tag as typeof tags[number])).length
-      + card.keywords.filter((word) => question.includes(word)).length * 2 }))
-    .filter(({ score }) => score > 0).sort((a, b) => b.score - a.score || a.card.id.localeCompare(b.card.id))
-    .slice(0, 4).map(({ card }) => card)
+  return rankKnowledge(cards, tags, question, mode === 'combined' ? ['psychology', 'tcm'] : [mode], topK)
 }
 
 export function localInsight(context: DailyContext): DailyInsight {
@@ -28,13 +28,14 @@ export function localInsight(context: DailyContext): DailyInsight {
       text: selected?.content ?? '暂无匹配的已审核知识，不强行解释。', citationIds: selected ? [selected.id] : [],
       uncertainty: selected?.uncertainty ?? '当前检索没有结果。' }
   })
-  return { schemaVersion: 1, date: context.date, status: context.today ? 'local_preview' : 'empty', perspectives,
+  return { schemaVersion: 1, knowledgeHash, date: context.date, status: context.today ? 'local_preview' : 'empty', perspectives,
     reply: contextFacts(context).join('\n'), notice: '本地教育预览 · 未调用 AI、未发送数据。两种视角独立呈现，不能互相推导。', help: null }
 }
 
 /** 网络响应也不可信：仅允许已审核原文和本次候选引用，拒绝自由生成的健康结论。 */
 export function validateInsight(input: unknown, context: DailyContext, mode: ConversationMode, candidates: KnowledgeCard[]): DailyInsight {
   const result = input as DailyInsight
+  if (result?.knowledgeHash !== undefined && result.knowledgeHash !== knowledgeHash) throw new Error('知识库版本不一致，请重新加载页面并重启服务。')
   if (!result || result.schemaVersion !== 1 || result.date !== context.date
     || !['mock', 'llm', 'fallback', 'blocked', 'empty'].includes(result.status)
     || typeof result.reply !== 'string' || typeof result.notice !== 'string'

@@ -1,20 +1,87 @@
 [
   {
-    "id": "TCM-DAILY-01", "domain": "tcm", "title": "从起居与劳逸看日常节奏",
-    "tags": ["sleepHours", "energy", "stress", "mood"], "keywords": ["作息", "休息", "睡眠", "疲惫", "中医", "劳逸"],
+    "id": "TCM-DAILY-01",
+    "domain": "tcm",
+    "title": "从起居与劳逸看日常节奏",
+    "tags": [
+      "sleepHours",
+      "energy",
+      "stress",
+      "mood"
+    ],
+    "keywords": [
+      "作息",
+      "休息",
+      "睡眠",
+      "疲惫",
+      "中医",
+      "劳逸"
+    ],
     "content": "《素问·上古天真论》把起居与劳作安排放在日常养生的讨论中。作为传统理论的阅读视角，可以把今天的休息与忙碌放回生活节奏里观察，而不只盯住一个分数。这不能证明你的身体出了什么问题，也不能据此判断证候或体质。",
     "uncertainty": "依据古代养生文本作原创教育转述，属于传统理论，不是现代临床疗效证据；没有根据记录开展个体辨证，也不承诺健康结果。",
     "evidenceType": "traditional_text",
-    "review": {"status": "source_checked", "checkedAt": "2026-11-19", "scope": "已核对上古天真论开篇起居有常、不妄作劳的原文；仅原创转述公版古文，无现代译注复制，未作临床有效性审核", "version": 1},
-    "source": {"title": "黄帝内经·素问第一卷", "publisher": "古代文献原文，维基文库收录", "url": "https://zh.wikisource.org/wiki/黃帝內經/素問第一卷", "locator": "上古天真论篇第一，岐伯首段答语（起居与劳作）"}
+    "review": {
+      "status": "source_checked",
+      "checkedAt": "2026-11-19",
+      "scope": "已核对上古天真论开篇起居有常、不妄作劳的原文；仅原创转述公版古文，无现代译注复制，未作临床有效性审核",
+      "version": 1
+    },
+    "version": 1,
+    "lifecycle": "active",
+    "sourceId": "SRC-SUWEN-01",
+    "sourceVersion": 1,
+    "sourceLocator": "上古天真论篇第一，岐伯首段答语（起居与劳作）",
+    "contentOrigin": "original_summary",
+    "professionalReview": {
+      "status": "not_reviewed",
+      "reviewer": null,
+      "qualification": null,
+      "reviewedAt": null,
+      "note": "沿用 V0.6 来源核对结果，未经过合格专业人员审核"
+    }
   },
   {
-    "id": "TCM-FRAME-01", "domain": "tcm", "title": "先认识理论语言，再理解自己的记录",
-    "tags": ["mood", "stress", "energy", "sleepHours"], "keywords": ["中医", "理论", "身心", "睡眠", "精力", "压力", "情绪", "阴阳", "气"],
+    "id": "TCM-FRAME-01",
+    "domain": "tcm",
+    "title": "先认识理论语言，再理解自己的记录",
+    "tags": [
+      "mood",
+      "stress",
+      "energy",
+      "sleepHours"
+    ],
+    "keywords": [
+      "中医",
+      "理论",
+      "身心",
+      "睡眠",
+      "精力",
+      "压力",
+      "情绪",
+      "阴阳",
+      "气"
+    ],
     "content": "中医有独立的理论与术语体系，可以作为了解传统身心观的教育视角。使用这些概念前，应先了解原有定义和语境。每日情绪、压力、精力或睡眠分值不能直接换算成中医证候，也不能据此判定体质。",
     "uncertainty": "此卡仅介绍中医术语的阅读边界，不提供个体辨证。WHO 的术语标准化出版物用于统一表达，不代表对某个疗法或个人判断的有效性背书。",
     "evidenceType": "terminology_standard",
-    "review": {"status": "source_checked", "checkedAt": "2026-11-19", "scope": "已核对 WHO 术语出版物题名与用途；只作理论阅读导引，未引用未核实古籍或疗效结论", "version": 1},
-    "source": {"title": "WHO international standard terminologies on traditional Chinese medicine", "publisher": "WHO", "url": "https://www.who.int/publications/i/item/9789240042322", "locator": "出版物介绍与术语标准化用途（2022）；本卡非古籍摘录"}
+    "review": {
+      "status": "source_checked",
+      "checkedAt": "2026-11-19",
+      "scope": "已核对 WHO 术语出版物题名与用途；只作理论阅读导引，未引用未核实古籍或疗效结论",
+      "version": 1
+    },
+    "version": 1,
+    "lifecycle": "active",
+    "sourceId": "SRC-WHO-TCM-TERMS",
+    "sourceVersion": 1,
+    "sourceLocator": "出版物介绍与术语标准化用途（2022）；本卡非古籍摘录",
+    "contentOrigin": "original_summary",
+    "professionalReview": {
+      "status": "not_reviewed",
+      "reviewer": null,
+      "qualification": null,
+      "reviewedAt": null,
+      "note": "沿用 V0.6 来源核对结果，未经过合格专业人员审核"
+    }
   }
 ]

@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "topK": {
+    "psychology": 2,
+    "tcm": 2
+  },
+  "score": {
+    "op": "add",
+    "args": [
+      {
+        "op": "tag_matches"
+      },
+      {
+        "op": "multiply",
+        "args": [
+          {
+            "op": "constant",
+            "value": 2
+          },
+          {
+            "op": "keyword_matches"
+          }
+        ]
+      }
+    ]
+  }
+}

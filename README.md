@@ -1,10 +1,10 @@
 # MindBody
 
-一个用于日常身心记录与自我观察的应用，使用 uni-app + Vue 3 + TypeScript。V0.6 在每日记录、历史、导出/删除与趋势基础上增加双视角身心洞察。记录保存在当前浏览器；本地教育预览不联网，服务调用需逐次明确授权。
+一个用于日常身心记录与自我观察的应用，使用 uni-app + Vue 3 + TypeScript。V0.7 在每日记录、历史、导出/删除、趋势与双视角身心洞察基础上，增加可维护的来源、知识审核、版本与检索工具。记录保存在当前浏览器；本地教育预览不联网，服务调用需逐次明确授权。
 
 ## 当前进度
 
-更新日期：2026-11-19。版本：0.6.0，双视角身心洞察 MVP。
+更新日期：2026-11-25。版本：0.7.0，双领域知识库工程化。用户已持续授权每批完成检查后提交并同步至现有 GitHub 仓库，不自动部署。
 
 | 功能 | 状态 |
 | --- | --- |
@@ -17,10 +17,11 @@
 | 7 天 / 30 天趋势 | 情绪、压力、精力、睡眠四项图表和逐日数值；缺失留白、0 小时有效 |
 | 身心洞察 | 今日/7 日程序事实、独立心理与中医知识卡、来源与局限、三种对话视角、自选一项微行动 |
 | 本机 FastAPI | 默认 Mock；可配置兼容 JSON Schema 的真实模型，密钥仅在服务端 |
+| 知识库维护 | 来源/卡片分离、独立专业审核/授权、草稿/版本/归档 CLI、每域 Top-K、快照哈希门禁；仍保留 4 张教育示例 |
 | AI 周报入口 | 已展示，保持禁用 |
 | PRD、开发路线、协作约定与验证记录 | 已完成 |
 
-真实模型只负责选择候选知识卡和反思句，解释正文使用经来源核对的教育文案，不开放自由医疗回答。对话与微行动仅保留在本页内存，不保存聊天历史或习惯打卡。没有账号、云同步、数据库或周报。本轮不自动进入下一阶段；2026-11-25 用户授权将 V0.5–V0.6 成果提交并同步至 GitHub，未部署。
+真实模型只负责选择候选知识卡和反思句，解释正文使用经来源核对的教育文案，不开放自由医疗回答。对话与微行动仅保留在本页内存，不保存聊天历史或习惯打卡。没有账号、云同步、数据库或周报。本轮不自动进入下一阶段；V0.7 依据用户的持续授权，在验证后提交并同步至 GitHub，未部署。
 
 ## 本地运行
 
@@ -93,15 +94,28 @@ $env:Path = "$mindbodyRuntime\node\bin;$mindbodyRuntime\bin\fallback;$env:Path"
 ## 检查与构建
 
 ```powershell
+pnpm knowledge:check
 pnpm type-check
 pnpm test
 pnpm test:api
 pnpm build:h5
-# 或一次执行以上四项（需先安装 Python 虚拟环境依赖）
+# 或一次执行以上五项（需先安装 Python 虚拟环境依赖）
 pnpm check
 ```
 
 构建产物在 `dist/build/h5/`，该目录已经被 Git 忽略。构建不等于部署。测试使用 Node 内置测试工具和已安装的 TypeScript/Vue 编译器，不额外安装测试框架，不访问用户浏览器存储。
+
+### 维护知识库
+
+```powershell
+pnpm knowledge validate
+pnpm knowledge:build
+pnpm knowledge:check
+```
+
+从 [知识库概念](docs/KNOWLEDGE_BASE.md) 开始学习；完整 [新增文献/卡片、审核、修改和归档流程](docs/KNOWLEDGE_MAINTENANCE.md)；[检索与向量检索接续](docs/KNOWLEDGE_RETRIEVAL.md)。编辑作者文件后必须 build；前端刷新/重建、API 重启后再调用。版本不一致时不会自动把健康摘要发送给新版服务。
+
+来源核对、专业审核、证据类型与复制授权分别记录。现有来源全文授权未知，当前只使用元数据与原创短转述；不自动抓取外部全文。Chunk 只定义结构，尚无 Embedding、向量索引或数据库。
 
 ## 主要文件
 
@@ -146,9 +160,17 @@ tests/
   integration.test.cjs         真实页面 setup 的完整流程 A–F
   helpers.cjs                 隔离内存 uni 与模块/页面测试运行器
 knowledge/
-  psychology.json         心理学教育卡（NIMH），含来源及核对范围
-  tcm.json                传统文本/术语阅读卡，证据类型与局限单独标注
+  psychology.json、tcm.json  作者维护的卡片（含草稿/归档），关联来源 ID/版本
+  sources.json             来源、授权与来源核对目录
+  retrieval.json           每域 Top-K 与唯一评分表达式
+  manifest.json            发布版本/哈希登记，禁止物理删除稳定 ID
+  generated.json           生成的正式知识快照，保留页面兼容字段
+scripts/
+  knowledge.py、run-knowledge.cjs  知识维护 CLI 与 Python 启动器
+src/generated/knowledge-ranking.ts  生成的前端检索实现，禁止手改
 backend/
+  knowledge_models.py、knowledge.py  知识运行时模型、加载与完整性检查
+  generated_ranking.py     生成的 Python 检索实现，禁止手改
   models.py               Pydantic 输入校验、统计复核与模型 JSON Schema
   engine.py               知识检索、风险分流、Mock/LLM 与安全降级
   app.py                  本机 FastAPI 端点、CORS 与不回显输入的错误
@@ -165,7 +187,9 @@ docs/
   IMPLEMENTATION_HANDOFF.md  共享接口、职责、阶段验收与接续说明
   VALIDATION_V0.5.md         本批次结果、限制和手动验收
   IMPLEMENTATION_V0.6.md     洞察数据契约与阶段交接
-  VALIDATION_V0.6.md         最新检查、限制和手动验收
+  VALIDATION_V0.6.md         V0.6 历史检查
+  IMPLEMENTATION_V0.7.md、VALIDATION_V0.7.md  本批次设计、交接和实际验收
+  KNOWLEDGE_BASE.md、KNOWLEDGE_MAINTENANCE.md、KNOWLEDGE_RETRIEVAL.md  知识库教程
 AGENTS.md                 AI 与开发者的协作约定
 .gitignore                排除依赖、构建产物、私有数据与密钥文件
 .npmrc                    精确保存依赖版本并检查 Node 版本
@@ -197,4 +221,4 @@ tsconfig.json             TypeScript 检查规则
 
 删除无法恢复：单条需确认日期，清空需两次确认。仅删除当前 v1 专用记录键，不清空整个网站存储。损坏或不兼容记录会阻止完整列表、导出和批量清空，原数据保持不动。批量删除不具备数据库事务能力，中途失败可能已删除一部分，会明确提示并重读。不要多标签同时修改记录。
 
-最新验收见 [V0.6 验证报告](docs/VALIDATION_V0.6.md)；洞察契约见 [V0.6 实施交接](docs/IMPLEMENTATION_V0.6.md)。V0.5 [存储接口交接](docs/IMPLEMENTATION_HANDOFF.md)及更早验收保留，其中未提交/推送描述对应当时的开发阶段。知识卡的 source_checked 只表示核对来源/转述，并非临床审核。关键词风险规则不能覆盖所有危险表达；服务只用于本机开发，未实现公开服务所需的认证/限流。小程序/App、真实模型端到端调用未验证。未部署，也未处理真实私人记录。
+最新验收见 [V0.7 验证报告](docs/VALIDATION_V0.7.md)，交接见 [V0.7 实施说明](docs/IMPLEMENTATION_V0.7.md)；原洞察和存储契约继续保留。知识卡的 source_checked 只表示核对来源/转述，并非临床审核。关键词风险规则不能覆盖所有危险表达；服务只用于本机开发，未实现公开服务所需的认证/限流。离线旧页面无法即时撤回静态知识，需刷新客户端；模型实连、小程序/App 未验证。本批次未部署或处理真实私人记录。

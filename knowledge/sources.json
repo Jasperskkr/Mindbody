@@ -1,0 +1,80 @@
+[
+  {
+    "id": "SRC-NIMH-SELFCARE",
+    "version": 1,
+    "title": "Caring for Your Mental Health",
+    "publisher": "NIMH",
+    "url": "https://www.nimh.nih.gov/health/topics/caring-for-your-mental-health",
+    "domains": [
+      "psychology"
+    ],
+    "documentType": "public_health_guidance",
+    "lifecycle": "active",
+    "verification": {
+      "status": "source_checked",
+      "checkedAt": "2026-11-19",
+      "note": "已核对原网页自我关怀与社会支持段落；未作临床有效性审核"
+    },
+    "authorization": {
+      "status": "unknown",
+      "license": null,
+      "allowedUses": [
+        "metadata",
+        "original_summary"
+      ],
+      "note": "网页或数字版本的复制授权尚未核实；只保留书目元数据与 MindBody 原创短转述，不复制全文或现代译注。古文为公版不代表网页所有内容均可复制。"
+    }
+  },
+  {
+    "id": "SRC-SUWEN-01",
+    "version": 1,
+    "title": "黄帝内经·素问第一卷",
+    "publisher": "古代文献原文，维基文库收录",
+    "url": "https://zh.wikisource.org/wiki/黃帝內經/素問第一卷",
+    "domains": [
+      "tcm"
+    ],
+    "documentType": "traditional_text",
+    "lifecycle": "active",
+    "verification": {
+      "status": "source_checked",
+      "checkedAt": "2026-11-19",
+      "note": "已核对上古天真论开篇起居有常、不妄作劳的原文；仅原创转述公版古文，无现代译注复制，未作临床有效性审核"
+    },
+    "authorization": {
+      "status": "unknown",
+      "license": null,
+      "allowedUses": [
+        "metadata",
+        "original_summary"
+      ],
+      "note": "网页或数字版本的复制授权尚未核实；只保留书目元数据与 MindBody 原创短转述，不复制全文或现代译注。古文为公版不代表网页所有内容均可复制。"
+    }
+  },
+  {
+    "id": "SRC-WHO-TCM-TERMS",
+    "version": 1,
+    "title": "WHO international standard terminologies on traditional Chinese medicine",
+    "publisher": "WHO",
+    "url": "https://www.who.int/publications/i/item/9789240042322",
+    "domains": [
+      "tcm"
+    ],
+    "documentType": "terminology_standard",
+    "lifecycle": "active",
+    "verification": {
+      "status": "source_checked",
+      "checkedAt": "2026-11-19",
+      "note": "已核对 WHO 术语出版物题名与用途；只作理论阅读导引，未引用未核实古籍或疗效结论"
+    },
+    "authorization": {
+      "status": "unknown",
+      "license": null,
+      "allowedUses": [
+        "metadata",
+        "original_summary"
+      ],
+      "note": "网页或数字版本的复制授权尚未核实；只保留书目元数据与 MindBody 原创短转述，不复制全文或现代译注。古文为公版不代表网页所有内容均可复制。"
+    }
+  }
+]

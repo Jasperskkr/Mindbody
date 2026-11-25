@@ -1,7 +1,7 @@
 import type { TrendMetricId } from './health'
 
-export type KnowledgeDomain = 'psychology' | 'tcm'
-export type KnowledgeReviewStatus = 'draft' | 'source_checked' | 'rejected'
+import type { KnowledgeDomain } from './knowledge'
+export type { KnowledgeDomain, KnowledgeReviewStatus, KnowledgeCard, SourceDocument, KnowledgeChunk } from './knowledge'
 export type ConversationMode = KnowledgeDomain | 'combined'
 export type InsightServiceMode = 'mock' | 'llm'
 export type InsightMetrics = Record<TrendMetricId, number | null>
@@ -21,18 +21,6 @@ export interface DailyContext {
   samples: ContextSample[]
   window: { startDate: string; endDate: string; days: 7; recordCount: number; metrics: Record<TrendMetricId, MetricSummary> }
 }
-export interface KnowledgeCard {
-  id: string
-  domain: KnowledgeDomain
-  title: string
-  tags: string[]
-  keywords: string[]
-  content: string
-  uncertainty: string
-  evidenceType: 'public_health_guidance' | 'terminology_standard' | 'traditional_text'
-  review: { status: KnowledgeReviewStatus; checkedAt: string; scope: string; version: 1 }
-  source: { title: string; publisher: string; url: string; locator: string }
-}
 export interface InsightPerspective {
   domain: KnowledgeDomain
   title: string
@@ -42,6 +30,7 @@ export interface InsightPerspective {
 }
 export interface DailyInsight {
   schemaVersion: 1
+  knowledgeHash?: string
   date: string
   status: 'local_preview' | 'mock' | 'llm' | 'fallback' | 'blocked' | 'empty'
   perspectives: InsightPerspective[]
@@ -55,6 +44,7 @@ export interface InsightConversation {
 }
 export interface MicroAction { id: string; title: string; description: string }
 export interface InsightRequest {
+  knowledgeHash?: string
   context: DailyContext
   mode: ConversationMode
   serviceMode: InsightServiceMode
@@ -62,6 +52,7 @@ export interface InsightRequest {
   consent: { granted: true; scope: 'daily-summary-and-question-v1'; providerHost: string | null; model: string | null }
 }
 export interface ServiceInfo {
+  knowledgeHash?: string
   schemaVersion: 1
   defaultMode: 'mock'
   llmEnabled: boolean

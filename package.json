@@ -1,6 +1,6 @@
 {
   "name": "mindbody",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "description": "MindBody 个人身心健康记录应用",
   "packageManager": "pnpm@11.19.0",
@@ -13,7 +13,10 @@
     "type-check": "vue-tsc --noEmit",
     "test": "node --test tests/*.test.cjs",
     "test:api": "node scripts/check-backend.cjs",
-    "check": "pnpm type-check && pnpm test && pnpm test:api && pnpm build:h5"
+    "knowledge": "node scripts/run-knowledge.cjs",
+    "knowledge:build": "node scripts/run-knowledge.cjs build",
+    "knowledge:check": "node scripts/run-knowledge.cjs check",
+    "check": "pnpm knowledge:check && pnpm type-check && pnpm test && pnpm test:api && pnpm build:h5"
   },
   "dependencies": {
     "@dcloudio/uni-app": "3.0.0-5030420261029002",

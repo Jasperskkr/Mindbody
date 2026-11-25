@@ -1,6 +1,6 @@
 # MindBody V0.5 实施与交接
 
-当前版本已到 V0.6；本文保留 V0.5 存储与管理接口契约，仍适用。新增洞察类型、服务、授权及阶段交接见 [IMPLEMENTATION_V0.6.md](./IMPLEMENTATION_V0.6.md)，最新实测见 [VALIDATION_V0.6.md](./VALIDATION_V0.6.md)。下文“不接 AI/后端”仅描述 V0.5 历史批次。
+当前版本已到 V0.7；本文保留 V0.5 存储与管理接口契约，仍适用。洞察原契约见 IMPLEMENTATION_V0.6.md，知识工程接续见 [IMPLEMENTATION_V0.7.md](./IMPLEMENTATION_V0.7.md)，最新实测见 [VALIDATION_V0.7.md](./VALIDATION_V0.7.md)。下文“不接 AI/后端”仅描述 V0.5 历史批次。
 
 状态：五个阶段已实现，阶段 5 最终检查结果见下表与 VALIDATION_V0.5.md。基线为 V0.2（543f197），本批次不提交、推送或部署。
 

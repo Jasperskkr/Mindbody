@@ -2,16 +2,14 @@ import json
 import os
 import re
 from dataclasses import dataclass
-from pathlib import Path
 from urllib.parse import urlparse
 
 import httpx
 
 from .models import DailyInsight, InsightRequest, ModelSelection, Perspective
+from .knowledge import CARDS, KNOWLEDGE_HASH, TOP_K
+from .generated_ranking import rank_knowledge
 
-ROOT = Path(__file__).resolve().parents[1]
-CARDS = [card for domain in ['psychology', 'tcm']
-         for card in json.loads((ROOT / 'knowledge' / f'{domain}.json').read_text(encoding='utf-8'))]
 REFLECTIONS = {
     'notice': '如果愿意，可以继续描述此刻最想被理解的感受；也可以停在这里。',
     'context': '你愿意补充当时的生活情境吗？记录中的变化本身不能说明原因。',
@@ -44,18 +42,15 @@ class Settings:
         return urlparse(self.base_url).hostname if self.available else None
 
 
-def retrieve(request: InsightRequest, cards=None):
+def retrieve(request: InsightRequest, cards=None, top_k=None):
     if request.context.today is None:
         return []
     tags = {key for key, value in request.context.today.model_dump().items() if value is not None}
-    ranked = []
-    for card in CARDS if cards is None else cards:
-        if card['review']['status'] != 'source_checked' or request.mode not in ['combined', card['domain']]:
-            continue
-        score = len(set(card['tags']) & tags) + sum(word in request.question for word in card['keywords']) * 2
-        if score:
-            ranked.append((score, card))
-    return [card for score, card in sorted(ranked, key=lambda pair: (-pair[0], pair[1]['id']))[:4]]
+    limits = TOP_K if top_k is None else top_k
+    if set(limits) != {'psychology', 'tcm'} or any(type(n) is not int or not 1 <= n <= 10 for n in limits.values()):
+        raise ValueError('每域 Top-K 必须为 1–10 整数')
+    return rank_knowledge(CARDS if cards is None else cards, tags, request.question,
+                          ['psychology', 'tcm'] if request.mode == 'combined' else [request.mode], limits)
 
 
 def risk_kind(text):
@@ -99,6 +94,8 @@ def call_model(request, candidates, settings):
 
 
 def generate(request, settings, cards=None, model_call=None):
+    if request.knowledgeHash is not None and request.knowledgeHash != KNOWLEDGE_HASH:
+        raise PermissionError('知识库版本已变化，请重新加载并授权。')
     if request.context.today is None:
         return DailyInsight(date=request.context.date, status='empty', perspectives=[], reply='今天还没有记录，请先留下愿意记录的一项。', notice='没有今日数据，不生成个体解释。')
     risk = risk_kind(request.question)

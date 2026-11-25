@@ -4,7 +4,7 @@ import { onShow, onHide } from '@dcloudio/uni-app'
 import type { DailyContext, DailyInsight, InsightConversation, InsightRequest, InsightServiceMode, ServiceInfo } from '../../types/insight'
 import { listDailyRecords } from '../../storage/daily-records'
 import { buildDailyContext, contextFacts } from '../../utils/daily-context'
-import { knowledgeCards, localInsight, microActions } from '../../utils/insight'
+import { knowledgeCards, knowledgeHash, knowledgeSources, localInsight, microActions } from '../../utils/insight'
 import { consentPreview, INSIGHT_API_ORIGIN, loadServiceInfo, requestInsight } from '../../services/insight-api'
 
 const context = ref<DailyContext | null>(null)
@@ -25,7 +25,7 @@ const approveButton = ref<unknown>(null)
 const sources = computed(() => knowledgeCards.filter((card) => insight.value?.perspectives.some((view) => view.citationIds.includes(card.id))))
 const facts = computed(() => context.value ? contextFacts(context.value) : [])
 const modeLabel = { psychology: '心理', tcm: '中医', combined: '综合' }
-const evidenceLabel = { public_health_guidance: '公共健康教育材料', terminology_standard: '术语标准', traditional_text: '古代传统理论文本' }
+const evidenceLabel = { public_health_guidance: '公共健康教育材料', terminology_standard: '术语标准', traditional_text: '古代传统理论文本', modern_research: '现代研究证据（需结合研究局限）' }
 const statusLabel = { local_preview: '本地教育预览', mock: 'Mock 服务回应', llm: 'AI 辅助选择', fallback: '安全降级模板', blocked: '专业支持引导', empty: '暂无今日记录' }
 let revision = 0
 
@@ -66,7 +66,7 @@ async function prepareRequest() {
     serviceInfo.value = info
     if (serviceMode.value === 'llm' && !info.llmEnabled) { feedback.value = '真实模型尚未启用。可使用 Mock 或本地预览；未发送记录。'; return }
     const input: InsightRequest = {
-      context: JSON.parse(JSON.stringify(context.value)), mode: conversation.value.mode, serviceMode: serviceMode.value,
+      knowledgeHash, context: JSON.parse(JSON.stringify(context.value)), mode: conversation.value.mode, serviceMode: serviceMode.value,
       question: question.value.trim(), consent: { granted: true, scope: 'daily-summary-and-question-v1',
         providerHost: serviceMode.value === 'llm' ? info.providerHost : null, model: serviceMode.value === 'llm' ? info.model : null },
     }
@@ -132,7 +132,7 @@ function openRecord() { uni.navigateTo({ url: '/pages/record/index' }) }
         </view>
       </view>
       <view v-if="sources.length" class="panel sources"><text class="title" role="heading" aria-level="2">知识来源</text>
-        <view v-for="source in sources" :key="source.id" class="source"><text>{{ source.id }} · {{ source.title }}</text><text class="muted">{{ evidenceLabel[source.evidenceType] }} · {{ source.source.publisher }} · 核对 {{ source.review.checkedAt }}</text><text class="muted">{{ source.review.scope }}</text><text class="muted">{{ source.source.title }} / {{ source.source.locator }}</text><text class="source-url" selectable>{{ source.source.url }}</text></view>
+        <view v-for="source in sources" :key="source.id" class="source"><text>{{ source.id }} · {{ source.title }}</text><text class="muted">{{ evidenceLabel[source.evidenceType] }} · {{ source.source.publisher }} · 核对 {{ source.review.checkedAt }}</text><text class="muted">卡片 v{{ source.version }} · {{ source.professionalReview.status === 'approved' ? '已记录专业审核' : '尚未经过专业审核' }} · {{ source.professionalReview.note }}</text><text class="muted">{{ source.review.scope }}</text><text class="muted">{{ knowledgeSources.find(item => item.id === source.sourceId)?.authorization.note }}</text><text class="muted">{{ source.source.title }} / {{ source.source.locator }}</text><text class="source-url" selectable>{{ source.source.url }}</text></view>
       </view>
       <view class="panel conversation"><text class="title" role="heading" aria-level="2">再聊一点</text><text class="muted">MVP 按本次主题选择知识卡与反思问题；不上传过去对话，不能诊断或治疗。对话仅保留在本页，重新进入会清除。</text>
         <view class="choices" role="group" aria-label="对话视角"><button v-for="mode in (['psychology','tcm','combined'] as const)" :key="mode" :aria-pressed="conversation.mode === mode" :class="{ chosen: conversation.mode === mode }" :disabled="sending || !!consentRequest" @click="selectMode(mode)" role="button" tabindex="0" @keyup.enter.stop.prevent="selectMode(mode)">{{ modeLabel[mode] }}</button></view>

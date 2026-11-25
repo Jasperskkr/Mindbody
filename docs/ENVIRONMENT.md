@@ -1,6 +1,6 @@
 # 环境与搭建方案
 
-首次检查日期：2026-11-18。工作目录：`F:\LJP\Mindbody`。以下初始化过程为历史记录，当前状态见末尾 V0.6 复核。
+首次检查日期：2026-11-18。工作目录：`F:\LJP\Mindbody`。以下初始化过程为历史记录，当前状态见末尾 V0.7 复核。
 
 ## 环境检查
 
@@ -57,3 +57,7 @@ pnpm 11 默认拦截依赖安装脚本。项目内的 `pnpm-workspace.yaml` 明�
 - pnpm check 新增 Python unittest 与跨语言契约步骤，需先创建 `.venv` 并安装锁定依赖。测试不需要 Key、不调用外部模型。后端仅回环监听，关闭访问日志，无请求/结果持久化。
 - H5 Mock 进行了实际本机 HTTP 验证；真实供应商未实连，要求 HTTPS Chat Completions 与 json_schema 支持。原生/小程序没有编译或真机验证，本机 API 地址将来需要平台适配。
 - 最新命令结果与限制见 VALIDATION_V0.6.md。
+
+## V0.7 复核（2026-11-25）
+
+原前后端依赖与 pnpm/Python 锁定文件保持不变。维护工具使用现有 Pydantic 与 Python 标准库，生成纯 TS/Python 评分函数；运行中的后端不执行 Node 子进程，不新增模型 SDK/向量服务。`pnpm check` 增加知识生成一致性检查。原生/小程序及真实 LLM 未验证，本机 API 需构建后重启。实际结果见 VALIDATION_V0.7.md。
