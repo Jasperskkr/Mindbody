@@ -27,3 +27,9 @@ exports/
 
 # Local QA screenshots and tool output
 .artifacts/
+
+# Local Python service runtime
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/

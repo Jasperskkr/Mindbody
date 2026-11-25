@@ -49,14 +49,15 @@ function openRecord() {
   })
 }
 
-function showTrendsPlaceholder() {
-  uni.showModal({
-    title: '慢慢看见自己的节奏',
-    content: '历史趋势将在后续阶段加入。当前可以先在每日记录页填写并保存当天感受。',
-    showCancel: false,
-    confirmText: '知道了',
-    confirmColor: '#47634c',
+function openHistory() {
+  uni.navigateTo({
+    url: '/pages/history/index',
+    fail: () => uni.showToast({ title: '暂时无法打开历史页，请重试。', icon: 'none' }),
   })
+}
+
+function openInsight() {
+  uni.navigateTo({ url: '/pages/insight/index', fail: () => uni.showToast({ title: '暂时无法打开洞察页，请重试。', icon: 'none' }) })
 }
 </script>
 
@@ -184,14 +185,17 @@ function showTrendsPlaceholder() {
         <text class="explore-subtitle">为日常多一点觉察</text>
       </view>
       <view class="entry-grid">
+        <button class="entry-card trend-entry" role="button" tabindex="0" @click="openInsight" @keyup.enter.stop.prevent="openInsight" @keydown.space.prevent @keyup.space.stop.prevent="openInsight">
+          <view class="entry-icon weekly-icon" aria-hidden="true">◎</view><view class="entry-copy"><text class="entry-title">身心洞察</text><text class="entry-description">心理学与中医理论，分别认识此刻</text></view><text class="entry-arrow" aria-hidden="true">↗</text>
+        </button>
         <button
           class="entry-card trend-entry"
           role="button"
           tabindex="0"
-          @click="showTrendsPlaceholder"
-          @keyup.enter.stop.prevent="showTrendsPlaceholder"
+          @click="openHistory"
+          @keyup.enter.stop.prevent="openHistory"
           @keydown.space.prevent
-          @keyup.space.stop.prevent="showTrendsPlaceholder"
+          @keyup.space.stop.prevent="openHistory"
         >
           <view class="entry-icon trend-icon" aria-hidden="true">
             <view class="bar bar-one" />

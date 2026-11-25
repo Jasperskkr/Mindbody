@@ -18,7 +18,7 @@ function createPage(storage) {
     const module = { exports: {} }
     const localRequire = (specifier) => {
       if (specifier === 'vue') return vue
-      if (specifier === '@dcloudio/uni-app') return { onLoad() {} }
+      if (specifier === '@dcloudio/uni-app') return { onShow() {} }
       if (specifier.endsWith('.vue')) return {}
       if (specifier.endsWith('/storage/daily-records')) return storage
       const file = path.resolve(base, `${specifier}.ts`)

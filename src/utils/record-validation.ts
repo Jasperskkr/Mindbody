@@ -1,4 +1,4 @@
-import type { DailyRecordForm, DailyRecordInput, ScaleValue } from '../types/health'
+import type { DailyRecord, DailyRecordForm, DailyRecordInput, ScaleValue } from '../types/health'
 import { isLocalDateKey } from './date'
 
 export const BODY_NOTE_MAX_LENGTH = 500
@@ -61,4 +61,18 @@ export function parseRecordForm(form: DailyRecordForm, date: string): Validation
     sleepHours: sleep === '' ? undefined : Number(sleep),
     bodyNote: form.bodyNote,
   })
+}
+
+/** 存储和导出复用完整记录校验，读取时不重新生成时间戳。 */
+export function validateDailyRecord(input: unknown):
+  { ok: true; value: DailyRecord } | { ok: false; message: string } {
+  const result = validateRecordInput(input)
+  if (!result.ok) return result
+  const source = input as Record<string, unknown>
+  const isTimestamp = (value: unknown): value is string =>
+    typeof value === 'string' && Number.isFinite(Date.parse(value))
+  if (!isTimestamp(source.createdAt) || !isTimestamp(source.updatedAt)) {
+    return { ok: false, message: '记录的创建或更新时间格式不正确。' }
+  }
+  return { ok: true, value: { ...result.value, createdAt: source.createdAt, updatedAt: source.updatedAt } }
 }

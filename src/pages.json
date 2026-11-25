@@ -13,6 +13,14 @@
         "navigationStyle": "custom",
         "navigationBarTitleText": "每日记录 · MindBody"
       }
+    },
+    {
+      "path": "pages/insight/index",
+      "style": { "navigationStyle": "custom", "navigationBarTitleText": "身心洞察 · MindBody" }
+    },
+    {
+      "path": "pages/history/index",
+      "style": { "navigationStyle": "custom", "navigationBarTitleText": "历史与趋势 · MindBody" }
     }
   ],
   "globalStyle": {

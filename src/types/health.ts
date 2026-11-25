@@ -39,3 +39,34 @@ export interface DailyRecordForm {
   sleepHours: string
   bodyNote: string
 }
+
+export type StorageErrorCode = 'INVALID_DATE' | 'INVALID_RECORD' | 'READ_FAILED'
+  | 'WRITE_FAILED' | 'CORRUPT_RECORD' | 'DELETE_FAILED'
+
+export interface RecordExport {
+  schemaVersion: 1
+  exportedAt: string
+  records: DailyRecord[]
+}
+
+export type TrendMetricId = 'mood' | 'stress' | 'energy' | 'sleepHours'
+export type TrendDays = 7 | 30
+export interface TrendPoint { date: string; value: number | null }
+export interface TrendSeries {
+  id: TrendMetricId
+  label: string
+  unit: '分' | '小时'
+  direction: string
+  min: number
+  max: number
+  points: TrendPoint[]
+  count: number
+  average: number | null
+}
+export interface HealthTrends {
+  days: TrendDays
+  startDate: string
+  endDate: string
+  recordCount: number
+  series: TrendSeries[]
+}

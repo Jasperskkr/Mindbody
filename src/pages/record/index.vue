@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
-import { onLoad } from '@dcloudio/uni-app'
+import { onShow } from '@dcloudio/uni-app'
 import ScaleField from '../../components/ScaleField.vue'
 import { scaleLabels } from '../../data/scales'
 import type { DailyRecord, DailyRecordForm } from '../../types/health'
@@ -45,7 +45,7 @@ async function readRecord() {
   }
 }
 
-onLoad(() => { void readRecord() })
+onShow(() => { void readRecord() })
 
 async function saveRecord() {
   if (busy.value) return
@@ -170,7 +170,7 @@ function goHome() {
 
     <view class="privacy-note">
       <text class="privacy-title">这份记录，留在你身边。</text>
-      <text>内容只保存在当前浏览器或设备，不会上传。清理浏览器数据或更换浏览器后，记录可能无法找回；本地存储未加密。</text>
+      <text>保存只写入当前浏览器或设备；身心洞察仅在你另行明确授权后传输必要摘要。清理浏览器数据或更换浏览器后，记录可能无法找回；本地存储未加密。</text>
       <text class="overview-note">保存成功后返回首页，即可在今日概览中看到这份记录。</text>
     </view>
   </view>
